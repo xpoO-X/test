@@ -244,8 +244,10 @@
       });
       },
       accept(cid){
-        this.msg = true;
-        this.creationId = cid;
+        // this.msg = true;
+        // this.creationId = cid;
+        this.$router.push('/newdetail');
+        localStorage.setItem('newdetailId',cid)
       },
       msgClosen() {
         this.msg = false;

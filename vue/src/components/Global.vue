@@ -2,7 +2,8 @@
   /*测试*/
   // const serverSrc='http://192.168.1.97:9001/';
   // const serverSrc='http://192.168.1.97:9001';
-  const serverSrc='http://hw.ifloat.cn';
+  // const serverSrc='http://hw.ifloat.cn';
+  const serverSrc='""';
   /*线上*/
   // const serverSrc='http://sellwechat.sskun.cn/';
   const imgSrc='http://toss.mocredit.cn/';

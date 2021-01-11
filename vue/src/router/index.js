@@ -42,5 +42,6 @@ export default new Router({
     {path: '/matters', name: 'matters', component: resolve => require(['@/page/matters'], resolve),},
     {path: '/matterB', name: 'matterB', component: resolve => require(['@/page/matterB'], resolve),},
     {path: '/downloadS', name: 'downloadS', component: resolve => require(['@/page/downloadS'], resolve),},
+    {path: '/newdetail', name: 'newdetail', component: resolve => require(['@/page/newdetail'], resolve),},
   ]
 })

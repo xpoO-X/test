@@ -3,7 +3,7 @@
   <div id="Cart">
     <div class="navBar">
       <div class="goback" @click="returns"></div>
-      <div @click="returns">选择授权类型</div>
+      <div @click="returns">授权类型</div>
       <div class="gH" @click="redirects('/Home')"><img src="../assets/ls/hA.png" alt=""></div>
     </div>
 <div>
@@ -94,7 +94,7 @@
         items:[{
           "id": 2,
           "code": "GIFTTYPEVIRTUAL",
-          "name": "著作权",
+          "name": "商标权",
           "introduction": "",
           "child": [{
             "id": 223,
@@ -130,7 +130,7 @@
         },{
           "id": 1,
           "code": "GIFTTYPEVIRTUAL",
-          "name": "商标权",
+          "name": "著作权",
           "introduction": "",
           "child": [{
             "id": 223,
@@ -149,97 +149,37 @@
         type: [{
           "id": 223,
           "code": "GIFTSUBTYPEDDDJ",
-          "name": "发表权",
+          "name": "商品商标",
           "introduction": "",
           "child": null
         }, {
           "id": 222,
           "code": "GIFTSUBTYPEEDJ",
-          "name": "署名权",
+          "name": "联合商标",
           "introduction": "",
           "child": null
         }, {
           "id": 222,
           "code": "GIFTSUBTYPEEDJ",
-          "name": "修改权",
+          "name": "服务商标",
           "introduction": "",
           "child": null
         }, {
           "id": 222,
           "code": "GIFTSUBTYPEEDJ",
-          "name": "保护作品完整权",
+          "name": "等级商标",
           "introduction": "",
           "child": null
         }, {
           "id": 222,
           "code": "GIFTSUBTYPEEDJ",
-          "name": "复制权",
+          "name": "集体商标",
           "introduction": "",
           "child": null
         }, {
           "id": 222,
           "code": "GIFTSUBTYPEEDJ",
-          "name": "发行权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "出租权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "展览权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "表演权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "放映权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "广播权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "信息网络传播权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "摄制权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "改编权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "翻译权",
-          "introduction": "",
-          "child": null
-        }, {
-          "id": 222,
-          "code": "GIFTSUBTYPEEDJ",
-          "name": "汇编权",
+          "name": "证明商标",
           "introduction": "",
           "child": null
         }],
@@ -265,6 +205,64 @@
         this.istrue = a;
         var that = this;
         if(a == '0'){
+          that.type =[{
+            "id": 223,
+            "code": "GIFTSUBTYPEDDDJ",
+            "name": "商品商标",
+            "introduction": "",
+            "child": null
+          }, {
+            "id": 222,
+            "code": "GIFTSUBTYPEEDJ",
+            "name": "联合商标",
+            "introduction": "",
+            "child": null
+          }, {
+            "id": 222,
+            "code": "GIFTSUBTYPEEDJ",
+            "name": "服务商标",
+            "introduction": "",
+            "child": null
+          }, {
+            "id": 222,
+            "code": "GIFTSUBTYPEEDJ",
+            "name": "等级商标",
+            "introduction": "",
+            "child": null
+          }, {
+            "id": 222,
+            "code": "GIFTSUBTYPEEDJ",
+            "name": "集体商标",
+            "introduction": "",
+            "child": null
+          }, {
+            "id": 222,
+            "code": "GIFTSUBTYPEEDJ",
+            "name": "证明商标",
+            "introduction": "",
+            "child": null
+          }]
+        }else if(a == '1'){
+          that.type =[{
+            "id": 223,
+            "code": "GIFTSUBTYPEDDDJ",
+            "name": "发明专利",
+            "introduction": "",
+            "child": null
+          }, {
+            "id": 222,
+            "code": "GIFTSUBTYPEEDJ",
+            "name": "外观设计专利",
+            "introduction": "",
+            "child": null
+          }, {
+            "id": 222,
+            "code": "GIFTSUBTYPEEDJ",
+            "name": "文实用新型专利",
+            "introduction": "",
+            "child": null
+          }]
+        }else {
           that.type =[{
             "id": 223,
             "code": "GIFTSUBTYPEDDDJ",
@@ -362,70 +360,7 @@
             "introduction": "",
             "child": null
           }]
-        }else if(a == '1'){
-          that.type =[{
-            "id": 223,
-            "code": "GIFTSUBTYPEDDDJ",
-            "name": "发明专利",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "外观设计专利",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "文实用新型专利",
-            "introduction": "",
-            "child": null
-          }]
-        }else {
-          that.type =[{
-            "id": 223,
-            "code": "GIFTSUBTYPEDDDJ",
-            "name": "商品商标",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "防御商品",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "联合商品",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "服务商品",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "等级商品",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "集体商标",
-            "introduction": "",
-            "child": null
-          }, {
-            "id": 222,
-            "code": "GIFTSUBTYPEEDJ",
-            "name": "证明商标",
-            "introduction": "",
-            "child": null
-          }]
+
         }
 
       //   var postData = qs.stringify({

@@ -9,25 +9,33 @@
           <div class="goback" @click="returns"></div>
           <div @click="returns">律师库</div>
         </div>
-        <div class="boxH">
-          <div class="Lsku_top1">
-            <ul class="NavTab">
-              <!--<li-->
-              <!--v-for="(item,index) in items"-->
-              <!--:key="index"-->
-              <!--:class="{list_active:istrue==index}"-->
-              <!--@click="listTab(index)"-->
-              <!--&gt;-->
-              <!--{{item.name}}-->
-              <!--<span :class="{list_bor:istrue==index}"></span>-->
-              <!--</li>-->
-              <li :class="{list_active:istrue==0}" @click="listTab(0)">全部 <span :class="{list_bor:istrue==0}"></span></li>
-              <li :class="{list_active:istrue==1}" @click="listTab(1)">著作权 <span :class="{list_bor:istrue==1}"></span></li>
-              <li :class="{list_active:istrue==2}" @click="listTab(2)">专利权 <span :class="{list_bor:istrue==2}"></span></li>
-              <li :class="{list_active:istrue==3}" @click="listTab(3)">集成电路 <span :class="{list_bor:istrue==3}"></span></li>
+        <div class="boxHL">
+          <!--<div class="Lsku_top1">-->
+            <!--<ul class="NavTab">-->
+              <!--&lt;!&ndash;<li&ndash;&gt;-->
+              <!--&lt;!&ndash;v-for="(item,index) in items"&ndash;&gt;-->
+              <!--&lt;!&ndash;:key="index"&ndash;&gt;-->
+              <!--&lt;!&ndash;:class="{list_active:istrue==index}"&ndash;&gt;-->
+              <!--&lt;!&ndash;@click="listTab(index)"&ndash;&gt;-->
+              <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+              <!--&lt;!&ndash;{{item.name}}&ndash;&gt;-->
+              <!--&lt;!&ndash;<span :class="{list_bor:istrue==index}"></span>&ndash;&gt;-->
+              <!--&lt;!&ndash;</li>&ndash;&gt;-->
+              <!--<li :class="{list_active:istrue==0}" @click="listTab(0)">全部 <span :class="{list_bor:istrue==0}"></span></li>-->
+              <!--<li :class="{list_active:istrue==1}" @click="listTab(1)">著作权 <span :class="{list_bor:istrue==1}"></span></li>-->
+              <!--<li :class="{list_active:istrue==2}" @click="listTab(2)">专利权 <span :class="{list_bor:istrue==2}"></span></li>-->
+              <!--<li :class="{list_active:istrue==3}" @click="listTab(3)">集成电路 <span :class="{list_bor:istrue==3}"></span></li>-->
 
-            </ul>
-            <img src="../assets/ls/sech.png" alt="" @click="redirects('/LsKuSearch')">
+            <!--</ul>-->
+            <!--<img src="../assets/ls/sech.png" alt="" @click="redirects('/LsKuSearch')">-->
+          <!--</div>-->
+          <div class="search_searchBox">
+            <div class="search_search">
+              <div class="search_searchL"><input v-model="searchStr" type="text" placeholder="律师名称"></div>
+              <div class="search_searchR" @click="searchInp">
+                <img src="../assets/ls/search1.png" alt="">
+              </div>
+            </div>
           </div>
           <div id="publish-list">
             <ol v-if="nulls">
@@ -48,24 +56,24 @@
                   >
                     <li>
                      <div class="Lsku_list">
-                       <div class="Lsku_litu"><img src="../assets/ls/ren.png" alt=""></div>
+                       <div class="Lsku_litu"><img :src=item.headerImg.filePath alt=""></div>
                        <div class="Lsku_liR">
                          <div class="Lsku_liRtop">
                               <div class="Lsku_liRleft">
-                                <div class="Lsku_liName">王律师</div>
-                                <div class="ext_lsLiwatr"><img src="../assets/ls/zuan.png" alt="">LV3</div>
-                                <div class="Lsku_liRt">经手案件：292起</div>
+                                <div class="Lsku_liName">{{item.realName}}</div>
+                                <div class="ext_lsLiwatr"><img src="../assets/ls/zuan.png" alt="">LV{{item.barrister.level}}</div>
+                                <div class="Lsku_liRt">经手案件：{{item.barrister.caseCount }}起</div>
                               </div>
                          </div>
                          <div style="clear: both"></div>
                          <div class="Lsku_liRbottom">
                            <div class="Lsku_liRbot">
-                             北京荣耀律师事务所
+                             {{item.businessName}}
                            </div>
                            <div class="Lsku_liRbob">
-                             <div class="Lsku_liRblue">从业8年</div>
-                             <div class="Lsku_liRred">擅长：仲裁</div>
-                             <div class="Lsku_liRred">领域专家</div>
+                             <!--<div class="Lsku_liRblue">从业8年</div>-->
+                             <!--<div class="Lsku_liRred">擅长：仲裁</div>-->
+                             <div class="Lsku_liRred">从业{{item.barrister.workTime | currency}}年</div>
                            </div>
                          </div>
                        </div>
@@ -153,6 +161,16 @@
             </van-tabbar>
           </div>
         </div>
+
+        <dialog-bar v-model="goInfo"
+                    type=""
+                    id="Ys"
+                    title=""
+                    content="<div class='tiTests'>去完善完个人信息</div>"
+                    v-on:cancel="clickCancels()"
+                    cancelText="确定">
+
+        </dialog-bar>
       </div>
     </div>
   <!--</transition>-->
@@ -168,11 +186,32 @@
 
   import normalMe from "../assets/ls/nme.png";
   import normalgwcw from "../assets/ls/yls.png";
+  import dialogBar from "../components/dialog";
   var qs = require("qs");
   var formData;
   var add = new Object();
 
   export default {
+    filters:{
+      currency(val){
+        if (val){
+          var yourtime = val.replace(/-/g,"/");//替换字符，变成标准格式
+          var d2=new Date();//取今天的日期
+          var d1 = new Date(Date.parse(yourtime));
+          console.log(d2-d1)
+          var d = Math.abs(d2.getTime() - d1.getTime()) / 1000 / 24 / 60 / 60;
+          var year = Math.floor(d / 365);//不整除取最小的年数或者直接进位（Math.ceil），或者四舍五入Math.round，自己改这个罗
+          console.log(year)
+          if(year<1){
+            year =1
+          }
+          return year
+        }
+      }
+    },
+    components: {
+      "dialog-bar": dialogBar,
+    },
     data() {
       return {
         scroll: "",
@@ -199,13 +238,21 @@
         homeX: true,
         isText: false,
         showBar: false,
+        goInfo: false,
         isBnum: true,
         isID: '',
+        searchStr: '',
         timer: null,  // 定时器名称
         transitionName: 'slide-left'//默认动画
       };
     },
     methods: {
+      searchInp(){
+        this.onLoad()
+      },
+      clickCancels(){
+        this.$router.push('/perfect');
+      },
       mask(){
         this.isText =false
         this.showBar =false
@@ -222,7 +269,15 @@
           }else {
             this.isText =false
           }
-          this.$router.push('/report');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.goInfo =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            this.$router.push('/report');
+          }
         }else {
           this.$router.push('/');
         }
@@ -238,7 +293,15 @@
           }else {
             this.isText =false
           }
-          this.$router.push('/power');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.goInfo =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            this.$router.push('/power');
+          }
         }else {
           this.$router.push('/');
         }
@@ -298,16 +361,58 @@
         if (this.isLoading) {
           return false;
         }
-        var that = this;
-        that.array=[{
-          "id": '01'
-        },{
-          "id": '02'
-        },{
-          "id": '03'
-        },{
-          "id": '04'
-        }]
+         var that = this;
+        // that.array=[{
+        //   "id": '01'
+        // },{
+        //   "id": '02'
+        // },{
+        //   "id": '03'
+        // },{
+        //   "id": '04'
+        // }]
+
+
+        var postDatasp = qs.stringify({
+          searchStr:that.searchStr,
+        });
+        // that.$axios.get(that.serverSrc+"app/mock/25/login",postData)
+        that.$axios.post(that.serverSrc+"/u/barrister/repostory",postDatasp)
+          .then(res=>{
+          if(res.data.code =="SUCCESS"){
+          setTimeout(function () {
+            console.log(res.data.body)
+            that.array =res.data.body
+            if(res.data.body.length>0){
+              that.nulls =true;
+            }else {
+              that.nulls =false;
+            }
+
+            that.finished =true
+            that.loading =false
+            Toast.clear();
+          },200)
+        }else {
+          Toast({
+            message:res.data.message,
+            duration:2000
+          });
+        }
+      })
+      .catch(err=>{
+          var str = err + '';
+        if(str.search('timeout') !== -1){
+
+        }else {
+          Toast({
+            message:"网络异常！",
+            duration:2000
+          })
+        }
+      });
+
+
         // if(that.istrue == 0){
         //   that.isDel =true
         // }else {
@@ -632,8 +737,8 @@
     //margin-left: j(-40);
     opacity: 0.6;
   }
-  .boxH{
-    margin-top: j(88);
+  .boxHL{
+    margin-top: j(200);
     margin-left: j(24);
     margin-right: j(24);
   }
@@ -690,6 +795,7 @@
 
   }
   .Lsku_liName{
+    min-width: j(140);
     font-size: j(32);
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 600;
@@ -893,5 +999,124 @@
   }
   .van-tabbar-item__icon--dot::after{
     right: j(-2)!important;
+  }
+  .tiTests{
+    width: 100%;
+    text-align: center;
+    font-size: j(38)  !important;
+    margin-top: j(120) !important;
+    color: #999999 !important;
+  }
+
+
+  /*搜索*/
+  .search_searchBox{
+    width: j(702);
+    height: j(108);
+    background: #f5f5f5;
+    position: fixed;
+    /*left: j(22);*/
+    top: j(88);
+    /*margin: j(22) auto j(24);*/
+    z-index: 97;
+  }
+  .search_search{
+    width: j(702);
+    height: j(68);
+    line-height: j(68);
+    background: #ffffff;
+    border-radius: j(34);
+    /*position: fixed;*/
+    /*left: j(22);*/
+    /*top: j(110);*/
+    /*margin: 0 auto;*/
+    margin-top: j(20);
+    z-index: 97;
+  }
+  .search_searchL{
+    float: left;
+    width: j(500);
+    margin-left: j(40);
+  }
+  .search_searchL input{
+    width: j(500);
+    height: j(68);
+    font-size: j(24);
+    background:none;
+    outline:none;
+    border:none;
+  }
+  .search_searchL input::-webkit-input-placeholder {
+    /* WebKit browsers */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchL input:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchL input::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchL input:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchR img{
+    float: right;
+    margin-right: j(28);
+    margin-top: j(10);
+    width: j(48);
+    height: j(48);
+  }
+  .search_List_more{
+    width: 100%;
+    background: #ffffff;
+    margin-top: j(196);
+  }
+  .search_ListT{
+    width: j(662);
+    height: j(96);
+    line-height: j(96);
+    border-bottom: 2px solid #E8EEF3;
+    margin: 0 auto;
+    font-size: j(28);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #1F2226;
+  }
+  .search_Li{
+    width: j(662);
+    height: j(99);
+    line-height: j(99);
+    margin: 0 auto;
+  }
+  .search_Li .search_LiL img{
+    width: j(32);
+    height: j(32);
+    float: left;
+    margin-top: j(38);
+    margin-right: j(20);
+  }
+  .search_Li .search_LiR img{
+    width: j(28);
+    height: j(28);
+    float: right;
+    margin-top: j(36);
+  }
+  .search_LiName{
+    width: j(550);
+    font-size: j(28);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #6F7275;
+    float: left;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
 </style>

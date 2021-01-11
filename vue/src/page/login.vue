@@ -136,6 +136,7 @@ var qs=require('qs');
                         localStorage.setItem('body',JSON.stringify(res.data.body));
                         localStorage.setItem('ID',JSON.stringify(res.data.body.id));
                         localStorage.setItem('AType',JSON.stringify(res.data.body.accountType));
+                        localStorage.setItem('isStatus',JSON.stringify(res.data.body.status));
                         that.$router.push(url);
                     }
                     else {

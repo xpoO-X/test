@@ -12,7 +12,8 @@
           <div class="car_Li">
             <img class="car_xing" src="../assets/ls/xing.png" alt="">
             <div class="car_name">举报人</div>
-            <input class="car_input" v-model="FrealName" type="text" placeholder="请输入举报人">
+            <input class="car_inputj" v-model="FrealName" type="text" placeholder="请输入举报人">
+            <div class="edit_sexj"><van-switch v-model="checked" size="26px" /></div>
           </div>
           <div class="car_Li"  @click="showPicker = true">
             <img class="car_xing" src="../assets/ls/xing.png" alt="">
@@ -153,6 +154,7 @@
         guanbi: true,
         list: [],
         imgType: true,
+        checked: false,
         maxNum: 9,
         columns: ['组织机构代码', '身份证'],
         transitionName: 'slide-left'//默认动画
@@ -512,6 +514,18 @@
     outline:none;
     border:none;
   }
+  .car_inputj{
+    width: j(270);
+    height: j(98);
+    font-size: j(28);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #1F2226;
+    line-height: j(98);
+    background:none;
+    outline:none;
+    border:none;
+  }
   .car_zheng{
     font-size: j(28);
     font-family: PingFangSC-Regular, PingFang SC;
@@ -540,6 +554,28 @@
     color: #BEC0C1;
   }
 
+
+
+  .car_inputj::-webkit-input-placeholder {
+    /* WebKit browsers */
+    font-size: j(28);
+    color: #BEC0C1;
+  }
+  .car_inputj:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    font-size: j(28);
+    color: #BEC0C1;
+  }
+  .car_inputj::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    font-size: j(28);
+    color: #BEC0C1;
+  }
+  .car_inputj:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    font-size: j(28);
+    color: #BEC0C1;
+  }
   .car_Li .car_xuan{
     width: j(32);
     height: j(32);
@@ -808,5 +844,17 @@
     margin-left: j(450);
     width: j(40);
     height: j(40);
+  }
+  .edit_sexj{
+    /*width: j(134);*/
+    height: j(52);
+    line-height: j(52);
+    margin-left: j(20);
+  }
+  .edit_sexj .van-switch{
+    background: #cccccc;
+  }
+  .van-switch--on{
+    background: #1C6DB1 !important;
   }
 </style>

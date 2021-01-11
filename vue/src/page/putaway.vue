@@ -8,27 +8,34 @@
         <div class="navBar">
           <div class="goback" @click="returns"></div>
           <div @click="returns">案件中心</div>
-          <div class="gH" @click="redirects('/Home')"><img src="../assets/ls/hA.png" alt=""></div>
         </div>
         <div class="box_Case">
-          <div class="Case_top">
-            <ul class="Case_NavTab">
-              <!--<li-->
-              <!--v-for="(item,index) in items"-->
-              <!--:key="index"-->
-              <!--:class="{list_active:istrue==index}"-->
-              <!--@click="listTab(index)"-->
-              <!--&gt;-->
-              <!--{{item.name}}-->
-              <!--<span :class="{list_bor:istrue==index}"></span>-->
-              <!--</li>-->
-              <li :class="{list_active:istrue==0}" @click="listTab(0)">全部 <span :class="{list_bor:istrue==0}"></span></li>
-              <li :class="{list_active:istrue==1}" @click="listTab(1)">著作权 <span :class="{list_bor:istrue==1}"></span></li>
-              <li :class="{list_active:istrue==2}" @click="listTab(2)">专利权 <span :class="{list_bor:istrue==2}"></span></li>
-              <li :class="{list_active:istrue==3}" @click="listTab(3)">集成电路 <span :class="{list_bor:istrue==3}"></span></li>
+          <!--<div class="Case_top">-->
+            <!--<ul class="Case_NavTab">-->
+              <!--&lt;!&ndash;<li&ndash;&gt;-->
+              <!--&lt;!&ndash;v-for="(item,index) in items"&ndash;&gt;-->
+              <!--&lt;!&ndash;:key="index"&ndash;&gt;-->
+              <!--&lt;!&ndash;:class="{list_active:istrue==index}"&ndash;&gt;-->
+              <!--&lt;!&ndash;@click="listTab(index)"&ndash;&gt;-->
+              <!--&lt;!&ndash;&gt;&ndash;&gt;-->
+              <!--&lt;!&ndash;{{item.name}}&ndash;&gt;-->
+              <!--&lt;!&ndash;<span :class="{list_bor:istrue==index}"></span>&ndash;&gt;-->
+              <!--&lt;!&ndash;</li>&ndash;&gt;-->
+              <!--<li :class="{list_active:istrue==0}" @click="listTab(0)">全部 <span :class="{list_bor:istrue==0}"></span></li>-->
+              <!--<li :class="{list_active:istrue==1}" @click="listTab(1)">著作权 <span :class="{list_bor:istrue==1}"></span></li>-->
+              <!--<li :class="{list_active:istrue==2}" @click="listTab(2)">专利权 <span :class="{list_bor:istrue==2}"></span></li>-->
+              <!--<li :class="{list_active:istrue==3}" @click="listTab(3)">集成电路 <span :class="{list_bor:istrue==3}"></span></li>-->
 
-            </ul>
-            <img src="../assets/ls/sech.png" alt="" @click="redirects('/CaseSearch')">
+            <!--</ul>-->
+            <!--<img src="../assets/ls/sech.png" alt="" @click="redirects('/CaseSearch')">-->
+          <!--</div>-->
+          <div class="search_searchBox">
+            <div class="search_search">
+              <div class="search_searchL"><input v-model="searchStr" type="text" placeholder="律师名称/案件名称/案件编号"></div>
+              <div class="search_searchR" @click="searchInp">
+                <img src="../assets/ls/search1.png" alt="">
+              </div>
+            </div>
           </div>
           <div id="Case-list">
             <ol v-if="true">
@@ -48,32 +55,33 @@
                     :key="index"
                   >
                     <li>
-                      <div class="Case_Li">
+                      <div class="Case_Li" @click="redirects('/azdetailH',item.id)">
 
                         <div class="Case_liTob">
-                          <div class="Case_liRblue">著作权</div>
-                          <div class="Case_liRred">摄影作品</div>
+                          <!--<div class="Case_liRblue">著作权</div>-->
+                          <div class="Case_liRred" v-if="item.protectType">{{item.protectType}}</div>
+                          <div class="Case_liRH" v-else>0</div>
                           <!--<div class="Case_liHq"><img src="../assets/ls/newhq.png" alt=""></div>-->
                         </div>
 
                         <div style="clear: both"></div>
                         <div class="Case_liText">
-                          北京市司法局关于批准佟珂在内地从事律师职业的决定
+                          {{item.caseTitle}}
                         </div>
 
 
                         <div class="Case_liBBT">
                           <div class="Case_gps">
-                            2020-12-23 12:34:21
+                            {{item.updateTime}}
                           </div>
                           <div class="Case_xing">
                             <!--<img src="../assets/ls/newxing.png" alt="">-->
                             <img class="newxingz" src="../assets/ls/newxingz.png" alt="">
-                            2222222
+                            {{item.viewCount}}
                           </div>
                           <div class="Case_liu">
                             <img src="../assets/ls/newliu.png" alt="">
-                            22222
+                            {{item.collectCount}}
                           </div>
                         </div>
                       </div>
@@ -170,6 +178,16 @@
           </van-tabbar-item>
         </van-tabbar>
       </div>
+
+      <dialog-bar v-model="goInfo"
+                  type=""
+                  id="Ys"
+                  title=""
+                  content="<div class='tiTests'>去完善完个人信息</div>"
+                  v-on:cancel="clickCancels()"
+                  cancelText="确定">
+
+      </dialog-bar>
     </div>
   <!--</transition>-->
 </template>
@@ -184,11 +202,15 @@
 
   import normalMe from "../assets/ls/nme.png";
   import normalgwcw from "../assets/ls/nls.png";
+  import dialogBar from "../components/dialog";
   var qs = require("qs");
   var formData;
   var add = new Object();
 
   export default {
+    components: {
+      "dialog-bar": dialogBar,
+    },
     data() {
       return {
         scroll: "",
@@ -215,13 +237,21 @@
         homeX: true,
         isText: false,
         showBar: false,
+        goInfo: false,
         isBnum: true,
         isID: '',
+        searchStr: '',
         timer: null,  // 定时器名称
         transitionName: 'slide-left'//默认动画
       };
     },
     methods: {
+      searchInp(){
+        this.onLoad()
+      },
+      clickCancels(){
+        this.$router.push('/perfect');
+      },
       mask(){
         this.isText =false
         this.showBar =false
@@ -238,7 +268,15 @@
           }else {
             this.isText =false
           }
-          this.$router.push('/report');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.goInfo =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            this.$router.push('/report');
+          }
         }else {
           this.$router.push('/');
         }
@@ -253,7 +291,15 @@
           }else {
             this.isText =false
           }
-          this.$router.push('/power');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.goInfo =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            this.$router.push('/power');
+          }
         }else {
           this.$router.push('/');
         }
@@ -273,10 +319,15 @@
       returns() {
         this.$router.go(-1);
       },
-      redirects(url) {
+      redirects(url,aid) {
         if(url != '/Home'){
           if(localStorage.getItem('ID')){
-            this.$router.push(url);
+            if(url == '/azdetailH'){
+              this.$router.push('/azdetailH');
+              localStorage.setItem('myIdH',aid)
+            }else {
+              this.$router.push(url);
+            }
           }else {
             this.$router.push('/');
           }
@@ -307,15 +358,56 @@
           return false;
         }
         var that = this;
-        that.array=[{
-          "id": '01'
-        },{
-          "id": '02'
-        },{
-          "id": '03'
-        },{
-          "id": '04'
-        }]
+        // that.array=[{
+        //   "id": '01'
+        // },{
+        //   "id": '02'
+        // },{
+        //   "id": '03'
+        // },{
+        //   "id": '04'
+        // }]
+
+        var postDatasp = qs.stringify({
+          searchStr:that.searchStr,
+        });
+        // that.$axios.get(that.serverSrc+"app/mock/25/login",postData)
+        that.$axios.post(that.serverSrc+"/case/repostory",postDatasp)
+          .then(res=>{
+          if(res.data.code =="SUCCESS"){
+          setTimeout(function () {
+            console.log(res.data.body)
+            that.array =res.data.body
+            if(res.data.body.length>0){
+              that.nulls =true;
+            }else {
+              that.nulls =false;
+            }
+
+            that.finished =true
+            that.loading =false
+            Toast.clear();
+          },200)
+        }else {
+          Toast({
+            message:res.data.message,
+            duration:2000
+          });
+        }
+      })
+      .catch(err=>{
+          var str = err + '';
+        if(str.search('timeout') !== -1){
+
+        }else {
+          Toast({
+            message:"网络异常！",
+            duration:2000
+          })
+        }
+      });
+
+
         // if(that.istrue == 0){
         //   that.isDel =true
         // }else {
@@ -623,6 +715,21 @@
     border-radius: 4px;
     border: 2px solid #F56B47;
     line-height:1;
+    margin-left: j(22);
+    margin-right: j(8);
+    margin-top: j(26);
+  }
+  .Case_liRH{
+    float: left;
+    padding: j(6) j(14);
+    font-size: j(24);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #ffffff;
+    background: #ffffff;
+    border-radius: 4px;
+    line-height:1;
+    margin-left: j(22);
     margin-right: j(8);
     margin-top: j(26);
   }
@@ -928,9 +1035,122 @@
   .van-tabbar-item__icon--dot::after{
     right: j(-2)!important;
   }
-  .gH img{
-    margin-left: j(450);
-    width: j(40);
-    height: j(40);
+  .tiTests{
+    width: 100%;
+    text-align: center;
+    font-size: j(38)  !important;
+    margin-top: j(120) !important;
+    color: #999999 !important;
+  }
+
+  /*搜索*/
+  .search_searchBox{
+    width: j(702);
+    height: j(108);
+    background: #f5f5f5;
+    position: fixed;
+    /*left: j(22);*/
+    top: j(88);
+    /*margin: j(22) auto j(24);*/
+    z-index: 97;
+  }
+  .search_search{
+    width: j(702);
+    height: j(68);
+    line-height: j(68);
+    background: #ffffff;
+    border-radius: j(34);
+    /*position: fixed;*/
+    /*left: j(22);*/
+    /*top: j(110);*/
+    /*margin: 0 auto;*/
+    margin-top: j(20);
+    z-index: 97;
+  }
+  .search_searchL{
+    float: left;
+    width: j(500);
+    margin-left: j(40);
+  }
+  .search_searchL input{
+    width: j(500);
+    height: j(68);
+    font-size: j(24);
+    background:none;
+    outline:none;
+    border:none;
+  }
+  .search_searchL input::-webkit-input-placeholder {
+    /* WebKit browsers */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchL input:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchL input::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchL input:-ms-input-placeholder {
+    /* Internet Explorer 10+ */
+    font-size: j(24);
+    color: #999999;
+  }
+  .search_searchR img{
+    float: right;
+    margin-right: j(28);
+    margin-top: j(10);
+    width: j(48);
+    height: j(48);
+  }
+  .search_List_more{
+    width: 100%;
+    background: #ffffff;
+    margin-top: j(196);
+  }
+  .search_ListT{
+    width: j(662);
+    height: j(96);
+    line-height: j(96);
+    border-bottom: 2px solid #E8EEF3;
+    margin: 0 auto;
+    font-size: j(28);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #1F2226;
+  }
+  .search_Li{
+    width: j(662);
+    height: j(99);
+    line-height: j(99);
+    margin: 0 auto;
+  }
+  .search_Li .search_LiL img{
+    width: j(32);
+    height: j(32);
+    float: left;
+    margin-top: j(38);
+    margin-right: j(20);
+  }
+  .search_Li .search_LiR img{
+    width: j(28);
+    height: j(28);
+    float: right;
+    margin-top: j(36);
+  }
+  .search_LiName{
+    width: j(550);
+    font-size: j(28);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #6F7275;
+    float: left;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap
   }
 </style>

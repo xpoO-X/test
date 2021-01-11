@@ -296,8 +296,8 @@
     <dialog-bar v-model="Ysuccsees"
                 type=""
                 id="Ys"
-                title="预约成功"
-                content="<div class='tiTests'>去看看订单信息</div>"
+                title=""
+                content="<div class='tiTests'>去完善完个人信息</div>"
                 v-on:cancel="clickCancels()"
                 cancelText="确定">
 
@@ -365,6 +365,9 @@
       }
     },
     methods: {
+      clickCancels(){
+        this.$router.push('/perfect');
+      },
       startRotate() {
         clearInterval(this.timer);
         this.timer = setInterval(()=>{
@@ -402,7 +405,15 @@
           }else {
             this.isText =false
           }
-          this.$router.push('/report');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.Ysuccsees =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            this.$router.push('/report');
+          }
         }else {
           this.$router.push('/');
         }
@@ -418,7 +429,15 @@
           }else {
             this.isText =false
           }
-          this.$router.push('/power');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.Ysuccsees =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            this.$router.push('/power');
+          }
         }else {
           this.$router.push('/');
         }
@@ -502,7 +521,10 @@
           if(res.data.code =="SUCCESS"){
           // localStorage.setItem('body',JSON.stringify(res.data.body));
           // if(localStorage.getItem('body')){
-            console.log(res.data.body)
+          //   console.log(res.data.body.user.status)
+          if(res.data.body.user.status){
+            localStorage.setItem('isStatus',JSON.stringify(res.data.body.user.status));
+          }
           that.isJson =JSON.parse(localStorage.getItem('body'))
             if(res.data.body.user.accountType =='PROTECT'){
               /*权利人*/

@@ -241,7 +241,9 @@
             message:"修改成功！",
             duration:2000
           })
-          that.init()
+          setTimeout(function () {
+            that.$router.push('/Me');
+          },2000)
         },1000)
         }else {
           Toast({

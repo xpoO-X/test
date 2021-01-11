@@ -79,10 +79,10 @@
               <!--</li>-->
               <li :class="{list_active:istrue==0}" @click="listTab(0)">维权直击 <span :class="{list_bor:istrue==0}"></span></li>
               <!--<li :class="{list_active:istrue==1}" @click="listTab(1)">更多案件 <span :class="{list_bor:istrue==1}"></span></li>-->
-              <li :class="{list_active:istrue==1}" @click="redirects('/more')">更多案件 <span :class="{list_bor:istrue==1}"></span></li>
+              <li :class="{list_active:istrue==1}" @click="redirects('/putaway')">更多案件 <span :class="{list_bor:istrue==1}"></span></li>
 
             </ul>
-            <div class="home_caseMore fr" @click="redirects('/more')"></div>
+            <div class="home_caseMore fr" @click="redirects('/putaway')"></div>
           </div>
 
           <div class="home_caseList" v-if="pList.length !=0 ? true:false">
@@ -107,7 +107,7 @@
                 <div class="fr">{{pList[2].updateTime}}</div>
               </div>
             </div>
-            <div class="home_caseBtext" @click="redirects('/more')">
+            <div class="home_caseBtext" @click="redirects('/putaway')">
               <img class="home_caseBimgL" src="../assets/ls/more-line-left.png" alt="">
               展示更多
               <img  class="home_caseBimgR" src="../assets/ls/more-line-right.png" alt="">
@@ -121,7 +121,7 @@
         <div class="home_ls">
           <div class="home_lsThead">
             <div class="home_lsTheadL">律师排行<img src="../assets/ls/paihang.png"></div>
-            <div class="home_lsTheadR" @click="redirects('/ranking')"></div>
+            <div class="home_lsTheadR" @click="redirects('/Lsku')"></div>
           </div>
           <div class="home_lsList" v-if="lsList.length !=0 ? true:false">
             <div class="home_lsLi">
@@ -275,6 +275,15 @@
         </van-tabbar>
       </div>
 
+      <dialog-bar v-model="goInfo"
+                  type=""
+                  id="Ys"
+                  title=""
+                  content="<div class='tiTests'>去完善完个人信息</div>"
+                  v-on:cancel="clickCancels()"
+                  cancelText="确定">
+
+      </dialog-bar>
     </div>
   <!--</transition>-->
 </template>
@@ -286,8 +295,12 @@
   import normalMe from "../assets/ls/nme.png";
   import normalgwcw from "../assets/ls/nls.png";
   import global_ from "../components/Global";
+  import dialogBar from "../components/dialog";
   var qs = require("qs");
   export default {
+    components: {
+      "dialog-bar": dialogBar,
+    },
     data() {
       return {
         serverSrc: global_.serverSrc,
@@ -307,6 +320,7 @@
         homeX: true,
         isText: false,
         showBar: false,
+        goInfo: false,
         ratingTageIndex: 0,
         datalist: [{
           id: '01',
@@ -339,6 +353,9 @@
       };
     },
     methods: {
+      clickCancels(){
+        this.$router.push('/perfect');
+      },
       mask(){
         this.isText =false
         this.showBar =false
@@ -358,8 +375,17 @@
           }else {
             this.isText =false
           }
-          // Toast('举报');
-          this.$router.push('/report');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.goInfo =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            // Toast('举报');
+            this.$router.push('/report');
+          }
+
         }else {
           this.$router.push('/');
         }
@@ -375,7 +401,15 @@
           }else {
             this.isText =false
           }
-          this.$router.push('/power');
+          if(localStorage.getItem('isStatus')){
+            if(JSON.parse(localStorage.getItem('isStatus')) == 'UN_DESC'){
+              this.goInfo =true;
+            }else {
+              this.$router.push('/power');
+            }
+          }else {
+            this.$router.push('/power');
+          }
         }else {
           this.$router.push('/');
         }
@@ -1403,5 +1437,12 @@
   }
   .van-tabbar-item__icon--dot::after{
     right: j(-2)!important;
+  }
+  .tiTests{
+    width: 100%;
+    text-align: center;
+    font-size: j(38)  !important;
+    margin-top: j(120) !important;
+    color: #999999 !important;
   }
 </style>

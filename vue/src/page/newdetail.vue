@@ -25,33 +25,56 @@
             <div class="azd_text">
               <div v-html="caseDetails"></div>
             </div>
-            <div class="azd_title">
-              相似案例
-            </div>
-            <div class="azd_li">
-                 <div class="azd_liTtext">
-                   北京市司法局关于批准佟珂在内地从事律师职北京市司法局关于批准佟珂在内律师职
-                 </div>
-                 <div class="azd_liBtext">2012-12-12 12:12:32</div>
-            </div>
-            <div class="azd_li">
-              <div class="azd_liTtext">
-                北京市司法局关于批准佟珂在内地从事律师职北京市司法局关于批准佟珂在内律师职
-              </div>
-              <div class="azd_liBtext">2012-12-12 12:12:32</div>
-            </div>
-          <div v-if="caseProcessLevel >=70 ">
-            <!--权利人-->
-            <div class="azd_btn" @click="redirects('/speed')" v-if="obligee">
-              <img src="../assets/ls/jindu.png" alt="">查看案件进度
-            </div>
-            <!--律师-->
-            <div class="azd_btn" @click="redirects('/speed')" v-if="lawyer">
-              <img src="../assets/ls/jindu.png" alt="">更新案件进度
-            </div>
+            <!--<div class="azd_title">-->
+              <!--相似案例-->
+            <!--</div>-->
+            <!--<div class="azd_li">-->
+                 <!--<div class="azd_liTtext">-->
+                   <!--北京市司法局关于批准佟珂在内地从事律师职北京市司法局关于批准佟珂在内律师职-->
+                 <!--</div>-->
+                 <!--<div class="azd_liBtext">2012-12-12 12:12:32</div>-->
+            <!--</div>-->
+            <!--<div class="azd_li">-->
+              <!--<div class="azd_liTtext">-->
+                <!--北京市司法局关于批准佟珂在内地从事律师职北京市司法局关于批准佟珂在内律师职-->
+              <!--</div>-->
+              <!--<div class="azd_liBtext">2012-12-12 12:12:32</div>-->
+            <!--</div>-->
+          <!--权利人-->
+          <!--<div class="azd_btn" @click="redirects('/speed')" v-if="obligee">-->
+            <!--<img src="../assets/ls/jindu.png" alt="">查看案件进度-->
+          <!--</div>-->
+          <!--&lt;!&ndash;律师&ndash;&gt;-->
+          <div class="azd_btn" @click="isYesNo">
+              操作
           </div>
         </div>
 
+    </div>
+    <div class="car">
+      <van-popup v-model="msg">
+        <div class="msgBoxd">
+          <div class="newest_xin" @click="yesBtn">
+            <img src="../assets/ls/newxin.png" alt="">
+            <div class="newest_noLeftc">接受案件</div>
+            <div class="newest_noRightc"></div>
+          </div>
+          <div class="newest_no" @click="NoBtn">
+            <img src="../assets/ls/newno.png" alt="">
+            <div class="newest_noLeft">拒绝接受</div>
+            <div class="newest_noRight"></div>
+          </div>
+        </div>
+        <div
+          class="closenBox"
+          @click="msgClosen"
+        >
+          <div class="msgClosen">
+            关闭
+          </div>
+        </div>
+
+      </van-popup>
     </div>
   </div>
   </transition>
@@ -85,11 +108,91 @@
         isSteps: 4,
         myID: '',
         barId: '',
-        caseProcessLevel: '',
+        msg:false,
         transitionName: 'slide-left'//默认动画
       }
     },
     methods: {
+      msgClosen() {
+        this.msg = false;
+      },
+      yesBtn(){
+        var that = this;
+        that.msg = false;
+        var postDatasn = qs.stringify({
+          barristerId:that.isID,
+          caseId:that.myID,
+        });
+        // that.$axios.get(that.serverSrc+"app/mock/25/login",postData)
+        that.$axios.post(that.serverSrc+"/case/confirm",postDatasn)
+          .then(res=>{
+          if(res.data.code =="SUCCESS"){
+          Toast({
+            message:'已接受！',
+            duration:2000
+          });
+          setTimeout(function () {
+            that.$router.push('/newest');
+          },2000)
+        }else {
+          Toast({
+            message:res.data.message,
+            duration:2000
+          });
+        }
+      })
+      .catch(err=>{
+          var str = err + '';
+        if(str.search('timeout') !== -1){
+
+        }else {
+          Toast({
+            message:"网络异常！",
+            duration:2000
+          })
+        }
+      });
+      },
+      NoBtn(){
+        var that = this;
+        that.msg = false;
+        var postDatasn = qs.stringify({
+          barristerId:that.isID,
+          caseId:that.myID,
+        });
+        // that.$axios.get(that.serverSrc+"app/mock/25/login",postData)
+        that.$axios.post(that.serverSrc+"/case/cancel",postDatasn)
+          .then(res=>{
+          if(res.data.code =="SUCCESS"){
+          Toast({
+            message:'已拒绝！',
+            duration:2000
+          });
+          setTimeout(function () {
+            that.$router.push('/newest');
+          },2000)
+        }else {
+          Toast({
+            message:res.data.message,
+            duration:2000
+          });
+        }
+      })
+      .catch(err=>{
+          var str = err + '';
+        if(str.search('timeout') !== -1){
+
+        }else {
+          Toast({
+            message:"网络异常！",
+            duration:2000
+          })
+        }
+      });
+      },
+      isYesNo(){
+         this.msg = true;
+      },
       init(){
         var that=this;
         var postDatau = qs.stringify({
@@ -105,7 +208,6 @@
               that.progressRemark = res.data.body.hwCase.progressRemark;
               that.caseDetails = res.data.body.hwCase.caseDetails;
               that.barId = res.data.body.hwCase.barristerId;
-              that.caseProcessLevel = res.data.body.hwCase.caseProcessLevel;
               if(that.isID  == that.barId){
 
                 this.lawyer=true;
@@ -165,8 +267,8 @@
       if(localStorage.getItem('ID')){
         this.isID =localStorage.getItem('ID')
       }
-      if(localStorage.getItem('myID')){
-        this.myID =localStorage.getItem('myID')
+      if(localStorage.getItem('newdetailId')){
+        this.myID =localStorage.getItem('newdetailId')
       }
       this.init();
       // if(localStorage.getItem('body')){
@@ -402,5 +504,109 @@
     margin-left: j(450);
     width: j(40);
     height: j(40);
+  }
+
+
+  /*弹出*/
+  .car .van-popup {
+    background: transparent;
+    top: 70% !important;
+  }
+  .msgBoxd {
+    width: j(702);
+    height: j(216);
+    background: #fff;
+    border-radius: 10px;
+    overflow: auto;
+  }
+  .closenBox {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+  }
+
+  .closenBox .msgClosen {
+    width: 100%;
+    height: j(108);
+    font-size: j(32);
+    line-height: j(108);
+    margin: j(18) auto;
+    background: #ffffff;
+    text-align: center;
+    border-radius: j(16);
+    color: #A5AAAE;
+  }
+  /*#Cart .van-popup{*/
+  /*top:70% !important;*/
+  /*}*/
+  .newest_no{
+    width: j(662);
+    height: j(106);
+    border-bottom: 2px solid #E8EEF3;
+    margin: 0 auto;
+  }
+  .newest_xin{
+    width: j(662);
+    height: j(98);
+    border-bottom: 2px solid #E8EEF3;
+    margin: 0 auto;
+  }
+  .newest_xin img{
+    width: j(48);
+    height: j(48);
+    float: left;
+    margin-top: j(22);
+    margin-right: j(16);
+  }
+  .newest_clear{
+    width: j(662);
+    height: j(98);
+    margin: 0 auto;
+  }
+  .newest_clear img{
+    width: j(48);
+    height: j(48);
+    float: left;
+    margin-top: j(22);
+    margin-right: j(16);
+  }
+  .newest_no img{
+    width: j(48);
+    height: j(48);
+    float: left;
+    margin-top: j(32);
+    margin-right: j(16);
+  }
+  .newest_noLeft{
+    font-size: j(32);
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: #1F2226;
+    float: left;
+    margin-top: j(34);
+  }
+  .newest_noRight{
+    font-size: j(28);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #AEB0B3;
+    float: right;
+    margin-top: j(36);
+  }
+  .newest_noLeftc{
+    font-size: j(32);
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 600;
+    color: #1F2226;
+    float: left;
+    margin-top: j(24);
+  }
+  .newest_noRightc{
+    font-size: j(28);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #AEB0B3;
+    float: right;
+    margin-top: j(26);
   }
 </style>

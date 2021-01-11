@@ -79,7 +79,10 @@
                               相似案例
                               <div class="myCase_gang"></div>
                             </div>
-                            <div class="myCase_btn myCase_btnr" @click="redirects('/azdetails',item.id)">
+                            <div class="myCase_btn myCase_btnr" v-if="item.caseProcessLevel<30">
+                              查看详情
+                            </div>
+                            <div class="myCase_btn myCase_btnr" v-else @click="redirects('/azdetails',item.id)">
                               查看详情
                             </div>
                         </div>

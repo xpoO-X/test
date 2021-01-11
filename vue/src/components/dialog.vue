@@ -1,5 +1,5 @@
 <template>
-  <div class="dialog" v-show="showMask">
+  <div class="dialog" @click="showMask =false" v-show="showMask">
     <div class="dialog-container">
       <div class="dialog-title">{{title}}</div>
       <div class="content" v-html="content"></div>
